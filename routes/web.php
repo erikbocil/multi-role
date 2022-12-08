@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use \App\Http\Controllers\Student;
 use \App\Http\Controllers\Teacher;
+use \App\Http\Controllers\Admin;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -15,9 +16,11 @@ use \App\Http\Controllers\Teacher;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// Route::get('/', function () {
+//     return view('welcome');
+// });
+
+Route::redirect('/', 'login');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::middleware('role:1')
@@ -40,27 +43,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->prefix('admin')
         ->name('admin.')
         ->group(function () {
-            Route::get('timetable', [\App\Http\Controllers\Admin\TimetableController::class, 'index'])
+            Route::get('timetable', [Admin\TimetableController::class, 'index'])
                 ->name('timetable');
         });
 });
 
-Route::prefix('student')->group(function () {
-    Route::get('profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-});
-
-Route::prefix('admin')->group(function () {
-    Route::get('profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-});
-
-Route::prefix('teacher')->group(function () {
-    Route::get('profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-});
+Route::get('profile', [ProfileController::class, 'edit'])->name('profile.edit');
+Route::patch('profile', [ProfileController::class, 'update'])->name('profile.update');
+Route::delete('profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
 require __DIR__ . '/auth.php';
